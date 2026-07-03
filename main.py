@@ -79,15 +79,15 @@ def main():
                     nisn_text = driver.find_element(
                         By.XPATH, "//span[text()='NISN Murid SPMB']/ancestor::div[contains(@class,'flex')]/div[2]"
                     ).text.strip()
-                    nisn = nisn_text.split("NISN Murid SPMB")[-1].strip()
+                    nisn = nisn_text.split("\n")[-1].strip()
                     math_score_text = driver.find_element(
                         By.XPATH, "//span[contains(text(),'TKA Matematika')]/ancestor::div[contains(@class,'flex')]/div[2]"
                     ).text.strip()
-                    math_score = math_score_text.split('TKA Matematika 2026')[-1].strip()
+                    math_score = math_score_text.split('\n')[-1].strip()
                     indonesian_score_text = driver.find_element(
                         By.XPATH, "//span[contains(text(),'TKA Bahasa Indonesia')]/ancestor::div[contains(@class,'flex')]/div[2]"
                     ).text.strip()
-                    indonesian_score = indonesian_score_text.split("TKA Bahasa Indoensia 2026")[-1].strip()
+                    indonesian_score = indonesian_score_text.split("\n")[-1].strip()
 
                     student_details = {
                         "name": student_name,
@@ -96,6 +96,7 @@ def main():
                         "math": math_score,
                         "indonesian": indonesian_score
                     }
+                    print(student_details)
                     students_data.append(student_details)
                     driver.back()
 
