@@ -14,7 +14,7 @@ def main():
     url = "https://smabali.spmb.id/010901/hasil"
     
     driver.get(url)
-    extracted_data = []
+    school_data = []
     school_page = 1
 
     while True:
@@ -43,7 +43,7 @@ def main():
                 "lowest": lowest_val
             }
 
-            extracted_data.append(data)
+            school_data.append(data)
 
             clickable_target = row.find_element(By.XPATH, "./td[1]/div/div[1]")
             current_url = driver.current_url
@@ -118,6 +118,8 @@ def main():
                 except (TimeoutException, NoSuchElementException):
                     print("Next button not found or page timeout. Stopping.")
                     break
+            
+            save_result(school_name, students_data)
 
             driver.back()
             WebDriverWait(driver, 10).until(
@@ -143,9 +145,18 @@ def main():
         except (TimeoutException, NoSuchElementException):
             print("Next button not found or page timeout. Stopping.")
             break
-        
+    
+    save_result('Seleksi Prestasi', school_data)
     driver.quit()
     print("Scraping success!")
+
+def save_result(filename, result):
+    keys = result[0].keys()
+    with open(f"{filename}.csv", mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=keys)
+        writer.writeheader()
+        writer.writerows(result)
+    print(f"{filename}.csv saved successfully!")
 
 if __name__ == "__main__":
     main()
