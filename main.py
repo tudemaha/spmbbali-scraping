@@ -12,6 +12,8 @@ def main():
     driver = webdriver.ChromiumEdge(service=Service(EdgeChromiumDriverManager().install()), options=options)
 
     url = "https://smabali.spmb.id/010901/hasil"
+
+    selected_school = []
     
     driver.get(url)
     school_data = []
@@ -31,6 +33,9 @@ def main():
             row = current_rows[i]
 
             school_name = row.find_element(By.XPATH, "./td[1]/div/div[1]").text.strip()
+
+            if school_name not in selected_school: continue
+
             npsn_text = row.find_element(By.XPATH, "./td[1]/div/div[2]").text.strip()
             npsn = npsn_text.split("-")[-1].strip() if "-" in npsn_text else npsn_text
             highest_val = row.find_element(By.XPATH, "./td[2]//div[contains(@class, 'bg-green-50')]/span").text.strip()
