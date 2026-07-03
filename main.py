@@ -6,14 +6,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 import csv
+from pathlib import Path
+
+url = "https://smabali.spmb.id/010101/hasil"
+selected_school = []
+selection_type = "Domisili"
 
 def main():
+
     options = webdriver.EdgeOptions()
     driver = webdriver.ChromiumEdge(service=Service(EdgeChromiumDriverManager().install()), options=options)
-
-    url = "https://smabali.spmb.id/010901/hasil"
-
-    selected_school = []
     
     driver.get(url)
     school_data = []
@@ -150,13 +152,16 @@ def main():
             print("Next button not found or page timeout. Stopping.")
             break
     
-    save_result('Seleksi Prestasi', school_data)
+    save_result(f'Seleksi {selection_type}', school_data)
     driver.quit()
     print("Scraping success!")
 
 def save_result(filename, result):
     keys = result[0].keys()
-    with open(f"{filename}.csv", mode="w", newline="", encoding="utf-8") as file:
+    directory = Path(selection_type)
+    directory.mkdir(parents=True, exist_ok=True)
+    
+    with open(f"{selection_type}/{filename}.csv", mode="w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=keys)
         writer.writeheader()
         writer.writerows(result)
