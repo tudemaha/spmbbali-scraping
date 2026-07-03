@@ -33,9 +33,6 @@ def main():
             row = current_rows[i]
 
             school_name = row.find_element(By.XPATH, "./td[1]/div/div[1]").text.strip()
-
-            if school_name not in selected_school: continue
-
             npsn_text = row.find_element(By.XPATH, "./td[1]/div/div[2]").text.strip()
             npsn = npsn_text.split("-")[-1].strip() if "-" in npsn_text else npsn_text
             highest_val = row.find_element(By.XPATH, "./td[2]//div[contains(@class, 'bg-green-50')]/span").text.strip()
@@ -50,6 +47,9 @@ def main():
 
             school_data.append(data)
 
+            if school_name not in selected_school: continue
+            selected_school.remove(school_name)
+
             clickable_target = row.find_element(By.XPATH, "./td[1]/div/div[1]")
             current_url = driver.current_url
             driver.execute_script("arguments[0].click()", clickable_target)
@@ -57,7 +57,6 @@ def main():
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "tbody.p-datatable-tbody tr"))
             )
-            
             students_data = []
             student_page = 1
 
